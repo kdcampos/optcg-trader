@@ -2,7 +2,7 @@
   "name": "op_tcg_trader",
   "private": true,
   "version": "0.0.0",
-  "homepage": "https://kdcampos.github.io/optcg-trader",
+  "homepage": "https://kdcampos.github.io/optcg-trader/",
   "type": "module",
   "scripts": {
     "start": "react-scripts start",
