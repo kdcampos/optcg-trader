@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import cart from "./assets/cart.png";
 import trash from "./assets/trash.png";
+import logo from "./assets/logo.png";
 import "./App.css";
 
 function App() {
@@ -115,7 +116,19 @@ function App() {
 
   return (
     <>
-      <h1>One Piece Card Game Trader</h1>
+      {/* header */}
+      <header>
+        <img className="logo" src={logo} alt="logo" />
+        <button
+          className={`toggle-cart-button ${showCart ? "hidden" : ""}`}
+          onClick={() => setShowCart(true)}
+        >
+          <img src={cart} alt="cart" />
+          {items.length > 0 && (
+            <span className="item-count">{items.length}</span>
+          )}
+        </button>
+      </header>
 
       {/* dropdown menus for sets*/}
       <div className="dropdowns">
@@ -152,15 +165,14 @@ function App() {
 
       {/*main section after set is selected */}
       <div className="trader">
-        {selectedSet && (
-          <input
-            type="text"
-            placeholder="Search cards..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="searchBar"
-          />
-        )}
+        <input
+          type="text"
+          placeholder="Search cards..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className={`searchBar ${selectedSet ? "visible" : "hidden"}`}
+        />
+
         {/* cards go here */}
         <div className="cardList">
           <div className="cards">
@@ -191,35 +203,40 @@ function App() {
         </div>
       </div>
 
-      {/*cart button */}
-      {!showCart && (
-        <button
-          className="toggle-cart-button"
-          onClick={() => setShowCart(true)}
-        >
-          <img src={cart} alt="cart" />
-          {items.length > 0 && (
-            <span className="item-count">{items.length}</span>
-          )}
-        </button>
-      )}
-
       {/* cart */}
       <div className={`cart-slide ${showCart ? "open" : ""}`}>
-        <h2>Cards</h2>
+        <div>
+          <button className="closeCart" onClick={() => setShowCart(false)}>
+            X
+          </button>
+        </div>
+
+        <div className="cart-header">
+          <h2>Cards</h2>
+        </div>
 
         <div className="cart-items">
-          {items.map((item, index) => (
-            <div key={index} className="cart-item">
-              <div className="item">
-                <p>{item.cleanName}</p>
-                <p className="prices">${item.lowPrice}</p>
+          {items.map((item, index) => {
+            const isEven = index % 2 === 0;
+            const itemClass = isEven ? "cart-item even" : "cart-item odd";
+
+            return (
+              <div key={index} className={itemClass}>
+                <div className="item">
+                  <p>{item.cleanName}</p>
+                  <p className="prices">${item.lowPrice}</p>
+                </div>
+                <div className="remove">
+                  <button
+                    className="remove-button"
+                    onClick={() => removeItem(index)}
+                  >
+                    <img src={trash} alt="trash" />
+                  </button>
+                </div>
               </div>
-              <button className="remove" onClick={() => removeItem(index)}>
-                <img src={trash} alt="" />
-              </button>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         <div className="total">
@@ -231,10 +248,6 @@ function App() {
 
         <button className="clearCart" onClick={() => setItems([])}>
           Clear Cart
-        </button>
-
-        <button className="closeCart" onClick={() => setShowCart(false)}>
-          X
         </button>
       </div>
     </>
